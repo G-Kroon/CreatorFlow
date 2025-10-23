@@ -1,0 +1,59 @@
+{
+  "name": "AudienceMetric",
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "tiktok",
+        "youtube",
+        "twitter",
+        "linkedin",
+        "facebook"
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "followers": {
+      "type": "number"
+    },
+    "engagement_rate": {
+      "type": "number",
+      "description": "Engagement rate as percentage"
+    },
+    "avg_views": {
+      "type": "number"
+    },
+    "avg_likes": {
+      "type": "number"
+    },
+    "avg_comments": {
+      "type": "number"
+    },
+    "demographics": {
+      "type": "object",
+      "properties": {
+        "age_groups": {
+          "type": "object"
+        },
+        "top_countries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gender_split": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "required": [
+    "platform",
+    "date",
+    "followers"
+  ]
+}
