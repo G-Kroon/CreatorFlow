@@ -1,0 +1,425 @@
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Book, Code, Database, Palette, Shield, Sparkles } from "lucide-react";
+
+export default function Documentation() {
+  return (
+    <div className="p-6 md:p-8 bg-gradient-to-br from-gray-50 via-purple-50/30 to-gray-50 min-h-screen">
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">
+            InfluenceCRM Documentation
+          </h1>
+          <p className="text-gray-600 text-lg">
+            A premium, feature-rich CRM platform designed specifically for content creators and influencers
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          {/* Overview */}
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-indigo-600" />
+                Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              <p className="text-gray-700">
+                InfluenceCRM is a comprehensive business management solution that helps influencers and content creators 
+                organize their campaigns, track partnerships, schedule content across multiple platforms, monitor revenue, 
+                and analyze audience metrics.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Key Features */}
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2">
+                <Book className="w-5 h-5 text-indigo-600" />
+                Key Features
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold text-lg mb-3 text-indigo-600">Dashboard</h3>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li>• Real-time overview of active campaigns</li>
+                    <li>• Revenue tracking and analytics</li>
+                    <li>• Upcoming content calendar preview</li>
+                    <li>• Key performance metrics at a glance</li>
+                    <li>• Engagement rate tracking across platforms</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-3 text-purple-600">Campaign Management</h3>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li>• Create and track brand campaigns</li>
+                    <li>• Manage deliverables with completion status</li>
+                    <li>• Payment tracking (pending, partial, paid)</li>
+                    <li>• Campaign timeline management</li>
+                    <li>• Notes and campaign details</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-3 text-pink-600">Brand Partnerships</h3>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li>• Maintain comprehensive brand database</li>
+                    <li>• Contact information management</li>
+                    <li>• Partnership status tracking</li>
+                    <li>• Industry categorization</li>
+                    <li>• Brand relationship history</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-3 text-green-600">Content Calendar</h3>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li>• Visual monthly calendar view</li>
+                    <li>• Schedule posts across multiple platforms</li>
+                    <li>• Platform-specific content types</li>
+                    <li>• Status tracking</li>
+                    <li>• Caption and hashtag management</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-3 text-amber-600">Revenue Tracking</h3>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li>• Multi-source income tracking</li>
+                    <li>• Payment status monitoring</li>
+                    <li>• Visual revenue analytics with charts</li>
+                    <li>• Monthly revenue breakdown</li>
+                    <li>• Revenue by source pie charts</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-3 text-blue-600">Audience Analytics</h3>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li>• Platform-wise audience metrics</li>
+                    <li>• Follower growth tracking</li>
+                    <li>• Engagement rate monitoring</li>
+                    <li>• Average views, likes, comments</li>
+                    <li>• Historical growth charts</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Technologies */}
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2">
+                <Code className="w-5 h-5 text-indigo-600" />
+                Technologies Used
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              <div>
+                <h3 className="font-semibold mb-3 flex items-center gap-2">
+                  <Badge className="bg-blue-100 text-blue-800">Frontend</Badge>
+                </h3>
+                <div className="grid md:grid-cols-2 gap-3 text-sm">
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">React 18</span> - UI library
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">JavaScript/ES6+</span> - Programming language
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">JSX</span> - Component templates
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">React Router DOM</span> - Routing
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-3 flex items-center gap-2">
+                  <Badge className="bg-purple-100 text-purple-800">Styling & UI</Badge>
+                </h3>
+                <div className="grid md:grid-cols-2 gap-3 text-sm">
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">Tailwind CSS</span> - Utility-first CSS
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">shadcn/ui</span> - Component library
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">Framer Motion</span> - Animations
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">Lucide React</span> - Icons
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-3 flex items-center gap-2">
+                  <Badge className="bg-green-100 text-green-800">Data & State</Badge>
+                </h3>
+                <div className="grid md:grid-cols-2 gap-3 text-sm">
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">@tanstack/react-query</span> - Data fetching
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">React Hooks</span> - State management
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">Recharts</span> - Data visualization
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">date-fns</span> - Date utilities
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-3 flex items-center gap-2">
+                  <Badge className="bg-amber-100 text-amber-800">Backend</Badge>
+                </h3>
+                <div className="grid md:grid-cols-2 gap-3 text-sm">
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">base44 Platform</span> - Serverless backend
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">JSON Schema</span> - Data modeling
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">Row-Level Security</span> - Access control
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold">JSON</span> - Data structures
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Data Model */}
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2">
+                <Database className="w-5 h-5 text-indigo-600" />
+                Data Model
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="border-l-4 border-indigo-500 pl-4 py-2">
+                  <h4 className="font-semibold text-indigo-600 mb-2">Brand Entity</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Name, logo, contact info</li>
+                    <li>• Industry & partnership status</li>
+                    <li>• Relationship notes</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-purple-500 pl-4 py-2">
+                  <h4 className="font-semibold text-purple-600 mb-2">Campaign Entity</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Title, dates, status</li>
+                    <li>• Deliverables tracking</li>
+                    <li>• Payment management</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-pink-500 pl-4 py-2">
+                  <h4 className="font-semibold text-pink-600 mb-2">Content Entity</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Platform & content type</li>
+                    <li>• Scheduling information</li>
+                    <li>• Caption & hashtags</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-amber-500 pl-4 py-2">
+                  <h4 className="font-semibold text-amber-600 mb-2">Revenue Entity</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Source & amount</li>
+                    <li>• Date & payment status</li>
+                    <li>• Brand & campaign links</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-blue-500 pl-4 py-2">
+                  <h4 className="font-semibold text-blue-600 mb-2">AudienceMetric Entity</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Platform & date</li>
+                    <li>• Followers & engagement</li>
+                    <li>• Demographics data</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Security */}
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-indigo-600" />
+                Security Features
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="font-semibold text-blue-900 mb-2">Row-Level Security (RLS)</h3>
+                <p className="text-sm text-blue-800 mb-3">
+                  The Content entity implements comprehensive RLS policies to protect user data:
+                </p>
+                <ul className="text-sm text-blue-700 space-y-2">
+                  <li>• <strong>Create:</strong> Authenticated users (non-guest) can create content</li>
+                  <li>• <strong>Read:</strong> Users can only access their own content or admins can access all</li>
+                  <li>• <strong>Update:</strong> Users can only update their own content or admins can update all</li>
+                  <li>• <strong>Delete:</strong> Users can only delete their own content or admins can delete all</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Design System */}
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="flex items-center gap-2">
+                <Palette className="w-5 h-5 text-indigo-600" />
+                Design System
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              <div>
+                <h3 className="font-semibold mb-3">Color Palette</h3>
+                <div className="flex flex-wrap gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+                    <span className="text-sm">Primary (Indigo-Purple)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500"></div>
+                    <span className="text-sm">Revenue (Amber)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-green-500"></div>
+                    <span className="text-sm">Success (Green)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-red-500"></div>
+                    <span className="text-sm">Danger (Red)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-3">Design Principles</h3>
+                <ul className="text-sm text-gray-700 space-y-2">
+                  <li>• Glass morphism effects with backdrop blur</li>
+                  <li>• Smooth animations and transitions</li>
+                  <li>• Hover states and interactive feedback</li>
+                  <li>• Responsive grid layouts</li>
+                  <li>• Card-based information architecture</li>
+                  <li>• Hierarchical typography</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Supported Platforms */}
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle>Supported Social Platforms</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="p-4 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg text-center">
+                  <p className="font-semibold text-pink-600">Instagram</p>
+                  <p className="text-xs text-gray-600 mt-1">Posts, Stories, Reels</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg text-center">
+                  <p className="font-semibold text-gray-900">TikTok</p>
+                  <p className="text-xs text-gray-600 mt-1">Videos</p>
+                </div>
+                <div className="p-4 bg-red-50 rounded-lg text-center">
+                  <p className="font-semibold text-red-600">YouTube</p>
+                  <p className="text-xs text-gray-600 mt-1">Videos, Shorts</p>
+                </div>
+                <div className="p-4 bg-blue-50 rounded-lg text-center">
+                  <p className="font-semibold text-blue-600">Twitter/X</p>
+                  <p className="text-xs text-gray-600 mt-1">Tweets</p>
+                </div>
+                <div className="p-4 bg-blue-50 rounded-lg text-center">
+                  <p className="font-semibold text-blue-700">LinkedIn</p>
+                  <p className="text-xs text-gray-600 mt-1">Articles, Posts</p>
+                </div>
+                <div className="p-4 bg-blue-50 rounded-lg text-center">
+                  <p className="font-semibold text-blue-600">Facebook</p>
+                  <p className="text-xs text-gray-600 mt-1">Posts</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Best Practices */}
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle>Best Practices</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold mb-3 text-indigo-600">Campaign Management</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>✓ Set clear deliverables with due dates</li>
+                    <li>✓ Track payment milestones</li>
+                    <li>✓ Maintain detailed notes</li>
+                    <li>✓ Update status regularly</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-3 text-purple-600">Content Planning</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>✓ Schedule 1+ week in advance</li>
+                    <li>✓ Use hashtags strategically</li>
+                    <li>✓ Plan multi-platform campaigns</li>
+                    <li>✓ Prepare captions beforehand</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-3 text-amber-600">Revenue Tracking</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>✓ Log income immediately</li>
+                    <li>✓ Track payment status diligently</li>
+                    <li>✓ Categorize revenue correctly</li>
+                    <li>✓ Review monthly for tax planning</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-3 text-pink-600">Brand Relationships</h3>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li>✓ Keep contacts updated</li>
+                    <li>✓ Document partnership history</li>
+                    <li>✓ Update relationship status</li>
+                    <li>✓ Organize by industry</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Footer */}
+          <div className="text-center py-8 text-gray-500 text-sm">
+            <p>Built with ❤️ on the base44 platform</p>
+            <p className="mt-2">Version 1.0.0 • June 2024</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
