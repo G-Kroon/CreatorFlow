@@ -1,0 +1,113 @@
+{
+  "name": "Content",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Content title"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "tiktok",
+        "youtube",
+        "twitter",
+        "linkedin",
+        "facebook"
+      ],
+      "description": "Platform for posting"
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "post",
+        "story",
+        "reel",
+        "video",
+        "tweet",
+        "article"
+      ],
+      "description": "Type of content"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "scheduled",
+        "published",
+        "cancelled"
+      ],
+      "default": "draft"
+    },
+    "campaign_id": {
+      "type": "string",
+      "description": "Associated campaign if sponsored"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "hashtags": {
+      "type": "string"
+    },
+    "media_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "title",
+    "platform"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": {
+          "$ne": "guest"
+        }
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
