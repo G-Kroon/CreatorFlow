@@ -1,0 +1,52 @@
+{
+  "name": "Brand",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Brand name"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Brand logo URL"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Primary contact person"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "industry": {
+      "type": "string",
+      "enum": [
+        "fashion",
+        "beauty",
+        "tech",
+        "fitness",
+        "food",
+        "travel",
+        "lifestyle",
+        "gaming",
+        "other"
+      ]
+    },
+    "partnership_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "potential",
+        "past"
+      ],
+      "default": "potential"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the brand"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
