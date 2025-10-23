@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -9,7 +10,8 @@ import {
   Users, 
   Building2,
   Sparkles,
-  LogOut
+  LogOut,
+  FileText // Added FileText icon
 } from "lucide-react";
 import {
   Sidebar,
@@ -56,6 +58,11 @@ const navigationItems = [
     title: "Analytics",
     url: createPageUrl("Analytics"),
     icon: Users,
+  },
+  {
+    title: "Documentation", // Added Documentation item
+    url: createPageUrl("Documentation"),
+    icon: FileText,
   },
 ];
 
