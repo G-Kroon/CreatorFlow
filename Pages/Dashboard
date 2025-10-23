@@ -1,0 +1,83 @@
+import React from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { Briefcase, Calendar, DollarSign, TrendingUp } from "lucide-react";
+import StatCard from "../components/dashboard/StatCard";
+import RecentCampaigns from "../components/dashboard/RecentCampaigns";
+import UpcomingContent from "../components/dashboard/UpcomingContent";
+
+export default function Dashboard() {
+  const { data: campaigns = [] } = useQuery({
+    queryKey: ['campaigns'],
+    queryFn: () => base44.entities.Campaign.list('-created_date'),
+  });
+
+  const { data: content = [] } = useQuery({
+    queryKey: ['content'],
+    queryFn: () => base44.entities.Content.list('scheduled_date'),
+  });
+
+  const { data: revenue = [] } = useQuery({
+    queryKey: ['revenue'],
+    queryFn: () => base44.entities.Revenue.list('-date'),
+  });
+
+  const activeCampaigns = campaigns.filter(c => c.status === 'active');
+  const thisMonthRevenue = revenue
+    .filter(r => new Date(r.date).getMonth() === new Date().getMonth())
+    .reduce((sum, r) => sum + r.amount, 0);
+  
+  const scheduledContent = content.filter(c => c.status === 'scheduled');
+
+  return (
+    <div className="p-6 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            Welcome Back
+          </h1>
+          <p className="text-gray-500">Here's what's happening with your creator business</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatCard
+            title="Active Campaigns"
+            value={activeCampaigns.length}
+            subtitle={`${campaigns.length} total`}
+            icon={Briefcase}
+            gradient="bg-gradient-to-br from-indigo-500 to-purple-600"
+            trend="+12%"
+          />
+          <StatCard
+            title="This Month Revenue"
+            value={`$${thisMonthRevenue.toLocaleString()}`}
+            subtitle={`${revenue.length} transactions`}
+            icon={DollarSign}
+            gradient="bg-gradient-to-br from-amber-400 to-orange-500"
+            trend="+23%"
+          />
+          <StatCard
+            title="Scheduled Posts"
+            value={scheduledContent.length}
+            subtitle="Next 7 days"
+            icon={Calendar}
+            gradient="bg-gradient-to-br from-emerald-400 to-teal-500"
+          />
+          <StatCard
+            title="Engagement Rate"
+            value="4.8%"
+            subtitle="Avg across platforms"
+            icon={TrendingUp}
+            gradient="bg-gradient-to-br from-pink-500 to-rose-500"
+            trend="+0.3%"
+          />
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-6">
+          <RecentCampaigns campaigns={activeCampaigns} />
+          <UpcomingContent content={scheduledContent} />
+        </div>
+      </div>
+    </div>
+  );
+}
