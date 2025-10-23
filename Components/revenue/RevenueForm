@@ -1,0 +1,122 @@
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+export default function RevenueForm({ onSubmit, onCancel }) {
+  const [formData, setFormData] = useState({
+    source: "sponsored_post",
+    amount: "",
+    date: new Date().toISOString().split('T')[0],
+    brand_name: "",
+    platform: "",
+    description: "",
+    status: "pending"
+  });
+
+  return (
+    <Card className="mb-8 bg-white/90 backdrop-blur-sm border-gray-200/60">
+      <CardHeader className="border-b border-gray-100">
+        <CardTitle>Add Revenue</CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6 space-y-6">
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label>Revenue Source</Label>
+            <Select
+              value={formData.source}
+              onValueChange={(value) => setFormData({ ...formData, source: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="sponsored_post">Sponsored Post</SelectItem>
+                <SelectItem value="affiliate">Affiliate</SelectItem>
+                <SelectItem value="merchandise">Merchandise</SelectItem>
+                <SelectItem value="course">Course</SelectItem>
+                <SelectItem value="consulting">Consulting</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Amount</Label>
+            <Input
+              type="number"
+              value={formData.amount}
+              onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
+              placeholder="5000"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Date</Label>
+            <Input
+              type="date"
+              value={formData.date}
+              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Status</Label>
+            <Select
+              value={formData.status}
+              onValueChange={(value) => setFormData({ ...formData, status: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="received">Received</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Brand Name (optional)</Label>
+            <Input
+              value={formData.brand_name}
+              onChange={(e) => setFormData({ ...formData, brand_name: e.target.value })}
+              placeholder="Nike"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Platform (optional)</Label>
+            <Input
+              value={formData.platform}
+              onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
+              placeholder="Instagram"
+            />
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <Label>Description</Label>
+            <Textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Additional details..."
+              rows={3}
+            />
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end gap-3 border-t border-gray-100 pt-6">
+        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+        <Button
+          onClick={() => onSubmit(formData)}
+          className="bg-gradient-to-r from-indigo-500 to-purple-600"
+        >
+          Add Revenue
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
