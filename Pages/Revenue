@@ -1,0 +1,189 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Plus, DollarSign, TrendingUp } from "lucide-react";
+import { format } from "date-fns";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import RevenueForm from "../components/revenue/RevenueForm";
+
+const sourceColors = {
+  sponsored_post: "#6366F1",
+  affiliate: "#F59E0B",
+  merchandise: "#10B981",
+  course: "#8B5CF6",
+  consulting: "#EC4899",
+  other: "#6B7280"
+};
+
+export default function Revenue() {
+  const [showForm, setShowForm] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { data: revenue = [] } = useQuery({
+    queryKey: ['revenue'],
+    queryFn: () => base44.entities.Revenue.list('-date'),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data) => base44.entities.Revenue.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['revenue'] });
+      setShowForm(false);
+    },
+  });
+
+  const totalRevenue = revenue.reduce((sum, r) => sum + r.amount, 0);
+  const receivedRevenue = revenue.filter(r => r.status === 'received').reduce((sum, r) => sum + r.amount, 0);
+  const pendingRevenue = revenue.filter(r => r.status === 'pending').reduce((sum, r) => sum + r.amount, 0);
+
+  const revenueBySource = Object.entries(
+    revenue.reduce((acc, r) => {
+      acc[r.source] = (acc[r.source] || 0) + r.amount;
+      return acc;
+    }, {})
+  ).map(([name, value]) => ({ name: name.replace(/_/g, ' '), value }));
+
+  const monthlyData = {};
+  revenue.forEach(r => {
+    const month = format(new Date(r.date), 'MMM yyyy');
+    monthlyData[month] = (monthlyData[month] || 0) + r.amount;
+  });
+  const monthlyRevenue = Object.entries(monthlyData).map(([month, amount]) => ({ month, amount }));
+
+  return (
+    <div className="p-6 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Revenue Tracking</h1>
+            <p className="text-gray-500">Monitor your earnings across all income streams</p>
+          </div>
+          <Button
+            onClick={() => setShowForm(true)}
+            className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg shadow-indigo-500/30"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Revenue
+          </Button>
+        </div>
+
+        {showForm && (
+          <RevenueForm
+            onSubmit={(data) => createMutation.mutate(data)}
+            onCancel={() => setShowForm(false)}
+          />
+        )}
+
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <Card className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <DollarSign className="w-6 h-6" />
+                <p className="font-medium opacity-90">Total Revenue</p>
+              </div>
+              <h3 className="text-4xl font-bold">${totalRevenue.toLocaleString()}</h3>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <TrendingUp className="w-6 h-6 text-green-600" />
+                <p className="font-medium text-gray-600">Received</p>
+              </div>
+              <h3 className="text-3xl font-bold text-green-600">${receivedRevenue.toLocaleString()}</h3>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <DollarSign className="w-6 h-6 text-amber-600" />
+                <p className="font-medium text-gray-600">Pending</p>
+              </div>
+              <h3 className="text-3xl font-bold text-amber-600">${pendingRevenue.toLocaleString()}</h3>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle>Revenue by Source</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={revenueBySource}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    label
+                  >
+                    {revenueBySource.map((entry, index) => (
+                      <Cell key={index} fill={Object.values(sourceColors)[index % Object.values(sourceColors).length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle>Monthly Revenue</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={monthlyRevenue}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="amount" fill="#6366F1" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200/60">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle>Recent Transactions</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              {revenue.map((item) => (
+                <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-1">
+                      <h4 className="font-semibold text-gray-900">
+                        {item.source.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      </h4>
+                      <Badge variant="outline" className={item.status === 'received' ? 'text-green-600' : 'text-amber-600'}>
+                        {item.status}
+                      </Badge>
+                    </div>
+                    {item.brand_name && <p className="text-sm text-gray-500 mb-1">{item.brand_name}</p>}
+                    {item.description && <p className="text-sm text-gray-600">{item.description}</p>}
+                    <p className="text-xs text-gray-400 mt-1">{format(new Date(item.date), "MMM d, yyyy")}</p>
+                  </div>
+                  <div className="text-right ml-4">
+                    <p className="text-2xl font-bold text-amber-600">${item.amount.toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
