@@ -1,0 +1,195 @@
+
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Calendar, DollarSign, CheckCircle, Briefcase } from "lucide-react";
+import { format } from "date-fns";
+import CampaignForm from "../components/campaigns/CampaignForm";
+import CampaignDetails from "../components/campaigns/CampaignDetails";
+
+const statusColors = {
+  planning: "bg-yellow-100 text-yellow-800 border-yellow-200",
+  active: "bg-green-100 text-green-800 border-green-200",
+  completed: "bg-blue-100 text-blue-800 border-blue-200",
+  cancelled: "bg-gray-100 text-gray-800 border-gray-200"
+};
+
+const paymentStatusColors = {
+  pending: "bg-orange-100 text-orange-800",
+  partial: "bg-blue-100 text-blue-800",
+  paid: "bg-green-100 text-green-800"
+};
+
+export default function Campaigns() {
+  const [showForm, setShowForm] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [editingCampaign, setEditingCampaign] = useState(null);
+  const queryClient = useQueryClient();
+
+  const { data: campaigns = [], isLoading } = useQuery({
+    queryKey: ['campaigns'],
+    queryFn: () => base44.entities.Campaign.list('-created_date'),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data) => base44.entities.Campaign.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['campaigns'] });
+      setShowForm(false);
+      setEditingCampaign(null);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Campaign.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['campaigns'] });
+      setShowForm(false);
+      setEditingCampaign(null);
+      setSelectedCampaign(null);
+    },
+  });
+
+  const handleEdit = (campaign) => {
+    setEditingCampaign(campaign);
+    setShowForm(true);
+    setSelectedCampaign(null);
+  };
+
+  return (
+    <div className="p-6 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Campaigns</h1>
+            <p className="text-gray-500">Manage your brand partnerships and campaigns</p>
+          </div>
+          <Button
+            onClick={() => {
+              setShowForm(true);
+              setEditingCampaign(null);
+            }}
+            className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg shadow-indigo-500/30"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Campaign
+          </Button>
+        </div>
+
+        {showForm && (
+          <CampaignForm
+            campaign={editingCampaign}
+            onSubmit={(data) => {
+              if (editingCampaign) {
+                updateMutation.mutate({ id: editingCampaign.id, data });
+              } else {
+                createMutation.mutate(data);
+              }
+            }}
+            onCancel={() => {
+              setShowForm(false);
+              setEditingCampaign(null);
+            }}
+          />
+        )}
+
+        {selectedCampaign && (
+          <CampaignDetails
+            campaign={selectedCampaign}
+            onClose={() => setSelectedCampaign(null)}
+            onEdit={handleEdit}
+          />
+        )}
+
+        <div className="grid gap-6">
+          {campaigns.map((campaign) => (
+            <Card
+              key={campaign.id}
+              className="bg-white/80 backdrop-blur-sm border-gray-200/60 hover:shadow-xl transition-all duration-300 cursor-pointer"
+              onClick={() => setSelectedCampaign(campaign)}
+            >
+              <CardHeader className="border-b border-gray-100">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-xl mb-2">{campaign.title}</CardTitle>
+                    <p className="text-sm text-gray-500">{campaign.brand_name}</p>
+                  </div>
+                  <Badge className={`${statusColors[campaign.status]} border`}>
+                    {campaign.status}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-indigo-50 rounded-lg">
+                      <Calendar className="w-5 h-5 text-indigo-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Timeline</p>
+                      <p className="font-medium text-sm">
+                        {campaign.start_date && format(new Date(campaign.start_date), "MMM d")}
+                        {campaign.end_date && ` - ${format(new Date(campaign.end_date), "MMM d")}`}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {campaign.payment_amount && (
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-amber-50 rounded-lg">
+                        <DollarSign className="w-5 h-5 text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Payment</p>
+                        <p className="font-bold text-amber-600">
+                          ${campaign.payment_amount.toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {campaign.deliverables && campaign.deliverables.length > 0 && (
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-green-50 rounded-lg">
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Deliverables</p>
+                        <p className="font-medium text-sm">
+                          {campaign.deliverables.filter(d => d.completed).length} / {campaign.deliverables.length} completed
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {campaign.payment_status && (
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <Badge className={paymentStatusColors[campaign.payment_status]}>
+                      Payment: {campaign.payment_status}
+                    </Badge>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+
+          {campaigns.length === 0 && !isLoading && (
+            <Card className="p-12 text-center border-dashed">
+              <Briefcase className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No campaigns yet</h3>
+              <p className="text-gray-500 mb-4">Start by creating your first campaign</p>
+              <Button onClick={() => setShowForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                Create Campaign
+              </Button>
+            </Card>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
