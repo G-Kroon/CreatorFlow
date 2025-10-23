@@ -1,0 +1,126 @@
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+export default function BrandForm({ brand, onSubmit, onCancel }) {
+  const [formData, setFormData] = useState(brand || {
+    name: "",
+    logo_url: "",
+    contact_name: "",
+    contact_email: "",
+    industry: "lifestyle",
+    partnership_status: "potential",
+    notes: ""
+  });
+
+  return (
+    <Card className="mb-8 bg-white/90 backdrop-blur-sm border-gray-200/60">
+      <CardHeader className="border-b border-gray-100">
+        <CardTitle>{brand ? "Edit Brand" : "Add New Brand"}</CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6 space-y-6">
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label>Brand Name</Label>
+            <Input
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="Nike"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Logo URL (optional)</Label>
+            <Input
+              value={formData.logo_url}
+              onChange={(e) => setFormData({ ...formData, logo_url: e.target.value })}
+              placeholder="https://..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Contact Name</Label>
+            <Input
+              value={formData.contact_name}
+              onChange={(e) => setFormData({ ...formData, contact_name: e.target.value })}
+              placeholder="John Smith"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Contact Email</Label>
+            <Input
+              type="email"
+              value={formData.contact_email}
+              onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
+              placeholder="john@brand.com"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Industry</Label>
+            <Select
+              value={formData.industry}
+              onValueChange={(value) => setFormData({ ...formData, industry: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="fashion">Fashion</SelectItem>
+                <SelectItem value="beauty">Beauty</SelectItem>
+                <SelectItem value="tech">Tech</SelectItem>
+                <SelectItem value="fitness">Fitness</SelectItem>
+                <SelectItem value="food">Food</SelectItem>
+                <SelectItem value="travel">Travel</SelectItem>
+                <SelectItem value="lifestyle">Lifestyle</SelectItem>
+                <SelectItem value="gaming">Gaming</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Partnership Status</Label>
+            <Select
+              value={formData.partnership_status}
+              onValueChange={(value) => setFormData({ ...formData, partnership_status: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="potential">Potential</SelectItem>
+                <SelectItem value="past">Past</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <Label>Notes</Label>
+            <Textarea
+              value={formData.notes}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              placeholder="Additional notes about the brand..."
+              rows={4}
+            />
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end gap-3 border-t border-gray-100 pt-6">
+        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+        <Button
+          onClick={() => onSubmit(formData)}
+          className="bg-gradient-to-r from-indigo-500 to-purple-600"
+        >
+          {brand ? "Update Brand" : "Add Brand"}
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
