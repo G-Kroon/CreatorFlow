@@ -1,0 +1,214 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, X } from "lucide-react";
+
+export default function CampaignForm({ campaign, onSubmit, onCancel }) {
+  const [formData, setFormData] = useState(campaign || {
+    title: "",
+    brand_name: "",
+    brand_id: "",
+    status: "planning",
+    start_date: "",
+    end_date: "",
+    payment_amount: "",
+    payment_status: "pending",
+    deliverables: [],
+    notes: ""
+  });
+
+  const { data: brands = [] } = useQuery({
+    queryKey: ['brands'],
+    queryFn: () => base44.entities.Brand.list('name'),
+  });
+
+  const addDeliverable = () => {
+    setFormData(prev => ({
+      ...prev,
+      deliverables: [...(prev.deliverables || []), { description: "", platform: "", completed: false }]
+    }));
+  };
+
+  const removeDeliverable = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      deliverables: prev.deliverables.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateDeliverable = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      deliverables: prev.deliverables.map((d, i) => 
+        i === index ? { ...d, [field]: value } : d
+      )
+    }));
+  };
+
+  return (
+    <Card className="mb-8 bg-white/90 backdrop-blur-sm border-gray-200/60">
+      <CardHeader className="border-b border-gray-100">
+        <CardTitle>{campaign ? "Edit Campaign" : "Create New Campaign"}</CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6 space-y-6">
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label>Campaign Title</Label>
+            <Input
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="Summer Collection 2024"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Brand</Label>
+            <Select
+              value={formData.brand_id}
+              onValueChange={(value) => {
+                const brand = brands.find(b => b.id === value);
+                setFormData({ 
+                  ...formData, 
+                  brand_id: value,
+                  brand_name: brand?.name || ""
+                });
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select brand" />
+              </SelectTrigger>
+              <SelectContent>
+                {brands.map(brand => (
+                  <SelectItem key={brand.id} value={brand.id}>{brand.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Status</Label>
+            <Select
+              value={formData.status}
+              onValueChange={(value) => setFormData({ ...formData, status: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="planning">Planning</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Payment Status</Label>
+            <Select
+              value={formData.payment_status}
+              onValueChange={(value) => setFormData({ ...formData, payment_status: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="partial">Partial</SelectItem>
+                <SelectItem value="paid">Paid</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Start Date</Label>
+            <Input
+              type="date"
+              value={formData.start_date}
+              onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>End Date</Label>
+            <Input
+              type="date"
+              value={formData.end_date}
+              onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+            />
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <Label>Payment Amount</Label>
+            <Input
+              type="number"
+              value={formData.payment_amount}
+              onChange={(e) => setFormData({ ...formData, payment_amount: parseFloat(e.target.value) })}
+              placeholder="5000"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <Label>Deliverables</Label>
+            <Button type="button" variant="outline" size="sm" onClick={addDeliverable}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Deliverable
+            </Button>
+          </div>
+
+          {formData.deliverables?.map((deliverable, index) => (
+            <div key={index} className="flex gap-3 items-start p-4 border rounded-lg">
+              <div className="flex-1 grid md:grid-cols-2 gap-3">
+                <Input
+                  placeholder="1 Instagram Reel"
+                  value={deliverable.description}
+                  onChange={(e) => updateDeliverable(index, 'description', e.target.value)}
+                />
+                <Input
+                  placeholder="Instagram"
+                  value={deliverable.platform}
+                  onChange={(e) => updateDeliverable(index, 'platform', e.target.value)}
+                />
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => removeDeliverable(index)}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-2">
+          <Label>Notes</Label>
+          <Textarea
+            value={formData.notes}
+            onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+            placeholder="Additional campaign notes..."
+            rows={4}
+          />
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end gap-3 border-t border-gray-100 pt-6">
+        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+        <Button
+          onClick={() => onSubmit(formData)}
+          className="bg-gradient-to-r from-indigo-500 to-purple-600"
+        >
+          {campaign ? "Update Campaign" : "Create Campaign"}
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
